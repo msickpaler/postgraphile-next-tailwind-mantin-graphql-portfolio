@@ -1,12 +1,11 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { MyApolloProvider } from "@/contexts/MyApolloPrivider";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -29,11 +28,6 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const client = new ApolloClient({
-  uri: "http://localhost:3000/graphql",
-  cache: new InMemoryCache(),
-});
-
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -46,11 +40,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         colorScheme: "dark",
       }}
     >
-      <ApolloProvider client={client}>
-        <AuthContext.Provider value={firebaseApp}>
+      <AuthContext.Provider value={firebaseApp}>
+        <MyApolloProvider>
           <Component {...pageProps} />
-        </AuthContext.Provider>
-      </ApolloProvider>
+        </MyApolloProvider>
+      </AuthContext.Provider>
     </MantineProvider>
   );
 }

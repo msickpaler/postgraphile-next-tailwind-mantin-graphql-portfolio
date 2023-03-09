@@ -5,11 +5,27 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   User,
+  onIdTokenChanged,
 } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const firebaseApp = useAuthContext();
   const auth = getAuth(firebaseApp);
+
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    onIdTokenChanged(auth, (user) => {
+      if (user) {
+        user.getIdToken().then((token) => {
+          setToken(token);
+        });
+      } else {
+        setToken(null);
+      }
+    });
+  }, [auth]);
 
   const subscribeCurrentUser = (callback: (user: User | null) => void) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -33,6 +49,7 @@ export const useAuth = () => {
   };
 
   return {
+    token,
     subscribeCurrentUser,
     getCurrentUser,
     signUp,
