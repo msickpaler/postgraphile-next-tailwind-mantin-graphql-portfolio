@@ -3,6 +3,7 @@
 		"graphiql",
 		"Mantine",
 		"postgraphile",
+		"signup",
 		"tailwindcss"
 	]
 }
