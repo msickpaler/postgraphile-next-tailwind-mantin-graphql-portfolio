@@ -9,12 +9,18 @@ process.on("uncaughtException", (exception) => {
 
 const express = require("express");
 const { postgraphile } = require("postgraphile");
+const cors = require("cors");
+
+const corsOptions = {
+  origin: "http://localhost:3001",
+};
 
 const config = require("./config/config.js");
 const { user, password, host, database, port, default_schema } =
   config.database;
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(
   postgraphile(
     process.env.DATABASE_URL ||

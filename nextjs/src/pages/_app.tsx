@@ -6,6 +6,7 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { FirebaseContext } from "@/contexts/AuthContext";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,6 +29,11 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+const client = new ApolloClient({
+  uri: "http://localhost:3000/graphql",
+  cache: new InMemoryCache(),
+});
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -40,9 +46,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         colorScheme: "dark",
       }}
     >
-      <FirebaseContext.Provider value={firebaseApp}>
-        <Component {...pageProps} />
-      </FirebaseContext.Provider>
+      <ApolloProvider client={client}>
+        <FirebaseContext.Provider value={firebaseApp}>
+          <Component {...pageProps} />
+        </FirebaseContext.Provider>
+      </ApolloProvider>
     </MantineProvider>
   );
 }
