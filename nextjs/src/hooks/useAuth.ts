@@ -1,4 +1,4 @@
-import { useFirebaseContext } from "@/contexts/AuthContext";
+import { useAuthContext } from "@/contexts/AuthContext";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 
 export const useAuth = () => {
-  const firebaseApp = useFirebaseContext();
+  const firebaseApp = useAuthContext();
   const auth = getAuth(firebaseApp);
 
   const subscribeCurrentUser = (callback: (user: User | null) => void) => {

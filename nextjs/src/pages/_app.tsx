@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { FirebaseContext } from "@/contexts/AuthContext";
+import { AuthContext } from "@/contexts/AuthContext";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
@@ -47,9 +47,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       }}
     >
       <ApolloProvider client={client}>
-        <FirebaseContext.Provider value={firebaseApp}>
+        <AuthContext.Provider value={firebaseApp}>
           <Component {...pageProps} />
-        </FirebaseContext.Provider>
+        </AuthContext.Provider>
       </ApolloProvider>
     </MantineProvider>
   );
