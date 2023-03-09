@@ -4,6 +4,8 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { FirebaseContext } from "@/contexts/AuthContext";
+import { ReactElement, ReactNode } from "react";
+import { NextPage } from "next";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -18,27 +20,29 @@ const firebaseApp = ((config) => {
   return getApp();
 })(firebaseConfig);
 
-export default function App(props: AppProps) {
-  const { Component, pageProps } = props;
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
-  return (
-    <>
-      <Head>
-        <title>Page title</title>
-      </Head>
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          /** Put your mantine theme override here */
-          colorScheme: "dark",
-        }}
-      >
-        <FirebaseContext.Provider value={firebaseApp}>
-          <Component {...pageProps} />
-        </FirebaseContext.Provider>
-      </MantineProvider>
-    </>
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        /** Put your mantine theme override here */
+        colorScheme: "dark",
+      }}
+    >
+      <FirebaseContext.Provider value={firebaseApp}>
+        <Component {...pageProps} />
+      </FirebaseContext.Provider>
+    </MantineProvider>
   );
 }
