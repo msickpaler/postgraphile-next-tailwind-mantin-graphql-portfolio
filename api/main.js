@@ -25,6 +25,7 @@ app.use(
       graphiql: true,
       enhanceGraphiql: true,
       retryOnInitFail: true,
+      exportGqlSchemaPath: "schema.graphql",
     }
   )
 );

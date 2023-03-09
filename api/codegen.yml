@@ -1,0 +1,17 @@
+overwrite: true
+schema: "./schema.graphql"
+generates:
+  # Creates the TypeScript types from the schema and any .graphql file
+  ../nextjs/src/types/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+    config:
+      withHOC: false
+      withComponent: false
+      withMutationFn: false
+config:
+  scalars:
+    DateTime: "string"
+    JSON: "{ [key: string]: any }"
