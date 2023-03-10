@@ -46,10 +46,10 @@ const SignIn: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Sign In</title>
+        <title>ログイン</title>
       </Head>
       <main className="flex flex-col items-center">
-        <h1 className="mt-12 mb-12">Sign In</h1>
+        <h1 className="mt-12 mb-12">ログイン</h1>
         <Box className="w-72">
           <LoginForm onSubmit={onSubmit} />
           <Divider className="my-2" />

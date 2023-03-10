@@ -95,10 +95,10 @@ const SignUp: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Sign Up</title>
+        <title>アカウント登録</title>
       </Head>
       <main className="flex flex-col items-center">
-        <h1 className="mt-12 mb-12">Sign Up</h1>
+        <h1 className="mt-12 mb-12">アカウント登録</h1>
         <Box className="w-72">
           <LoginForm onSubmit={onSubmit} />
           <Divider className="my-2" />
