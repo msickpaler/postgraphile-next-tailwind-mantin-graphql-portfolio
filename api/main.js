@@ -1,26 +1,26 @@
-/**
- * Catch and log uncaught exceptions as soon as they happen, log them, then exit with error code 1.
- * Do this before loading anything else.
- */
-process.on("uncaughtException", (exception) => {
-  console.error(`An uncaughtException happened:\n${exception}`);
-  process.exit(1);
-});
-
 const express = require("express");
+const { applicationDefault } = require("firebase-admin/app");
+const admin = require("firebase-admin");
 const { postgraphile } = require("postgraphile");
+const config = require("./config/config.js");
 const cors = require("cors");
+
+const app = express();
+
+admin.initializeApp({
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  credential: applicationDefault(),
+});
+const auth = admin.auth();
 
 const corsOptions = {
   origin: "http://localhost:3001",
 };
+app.use(cors(corsOptions));
 
-const config = require("./config/config.js");
 const { user, password, host, database, port, default_schema } =
   config.database;
 
-const app = express();
-app.use(cors(corsOptions));
 app.use(
   postgraphile(
     process.env.DATABASE_URL ||
@@ -32,6 +32,14 @@ app.use(
       enhanceGraphiql: true,
       retryOnInitFail: true,
       exportGqlSchemaPath: "schema.graphql",
+      pgSettings: async (req) => {
+        const token = req.headers.authorization.split("Bearer ")[1];
+        const decodedToken = await auth.verifyIdToken(token);
+        return {
+          role: process.env.DB_WRITE_USER,
+          "jwt.claims.uid": decodedToken.uid,
+        };
+      },
     }
   )
 );

@@ -4,7 +4,7 @@
 # $ docker-compose down && docker-compose up -d
 
 # Set up base node image
-FROM node:10-alpine
+FROM node:16-alpine
 
 # Set up the Docker Working Directory
 ENV HOME=/usr/src/api

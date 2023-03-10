@@ -6,7 +6,6 @@ POSTGRES="psql -v ON_ERROR_STOP=1 --username ${POSTGRES_USER} --dbname ${POSTGRE
 
 #Running the Scripts Goes Under Here
 for script in /scripts/*.sql;do
-    echo ${script};
     $POSTGRES --echo-all -f ${script};
 done
 
