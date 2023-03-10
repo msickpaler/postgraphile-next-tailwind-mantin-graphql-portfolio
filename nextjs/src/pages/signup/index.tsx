@@ -32,7 +32,7 @@ const SignUp: NextPageWithLayout = () => {
     onCompleted: async () => {
       router.replace("/");
     },
-    onError: (e) => {
+    onError: () => {
       modals.openContextModal({
         ...infoModalDefaultArgs,
         title: "登録エラー",
