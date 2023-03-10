@@ -1,18 +1,65 @@
-import { LoginForm } from "@/components/Form/loginForm";
+import { LoginForm } from "@/components/Form/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
+import { CreateUserInput } from "@/types/graphql";
+import { gql, useMutation } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { Box, Divider } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
 
+const CREATE_USER_MUTATION = gql`
+  mutation createUser($input: CreateUserInput!) {
+    createUser(input: $input) {
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const SignUp: NextPageWithLayout = () => {
   const { signUp } = useAuth();
+  const router = useRouter();
 
-  const onSubmit = (values: { email: string; pw: string }) => {
-    signUp(values.email, values.pw);
+  const [createUser] = useMutation(CREATE_USER_MUTATION, {
+    onCompleted: async () => {
+      window.location.href = "/";
+    },
+    onError: (e) => {
+      console.error("e", e);
+    },
+  });
+
+  const onSubmit = async (values: { email: string; pw: string }) => {
+    const result = await signUp(values.email, values.pw);
+    const token = await result.user.getIdToken();
+
+    const input: CreateUserInput = {
+      user: {
+        id: result.user.uid,
+        name: "新規ユーザー",
+        updatedAt: "2021-08-01T00:00:00.000Z",
+      },
+    };
+
+    createUser({
+      variables: {
+        input,
+      },
+      context: {
+        headers: {
+          // 登録後はuseAuthのtokenはすぐには反映されないので、個別に設定する
+          authorization: `Bearer ${token}`,
+        },
+      },
+    });
+
+    router.replace("/");
   };
 
   return (
@@ -26,7 +73,10 @@ const SignUp: NextPageWithLayout = () => {
           <LoginForm onSubmit={onSubmit} />
           <Divider className="my-2" />
           <span className="text-sm">
-            ログインは<Link href="/login">こちら</Link>
+            ログインは
+            <Link href="/login" className="underline">
+              こちら
+            </Link>
           </span>
         </Box>
       </main>

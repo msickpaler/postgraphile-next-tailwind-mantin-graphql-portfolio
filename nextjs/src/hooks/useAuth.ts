@@ -14,9 +14,12 @@ export const useAuth = () => {
   const auth = getAuth(firebaseApp);
 
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
-    onIdTokenChanged(auth, (user) => {
+    const unsubscribe = onIdTokenChanged(auth, (user) => {
       if (user) {
         user.getIdToken().then((token) => {
           setToken(token);
@@ -25,18 +28,16 @@ export const useAuth = () => {
         setToken(null);
       }
     });
+    return unsubscribe;
   }, [auth]);
 
-  const subscribeCurrentUser = (callback: (user: User | null) => void) => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      callback(user);
+      setUser(user);
+      setLoadingUser(false);
     });
     return unsubscribe;
-  };
-
-  const getCurrentUser = () => {
-    return auth.currentUser;
-  };
+  }, [auth]);
 
   const signUp = async (email: string, password: string) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -48,11 +49,16 @@ export const useAuth = () => {
     return result;
   };
 
+  const signOut = async () => {
+    await auth.signOut();
+  };
+
   return {
     token,
-    subscribeCurrentUser,
-    getCurrentUser,
+    user,
+    loadingUser,
     signUp,
     signIn,
+    signOut,
   };
 };

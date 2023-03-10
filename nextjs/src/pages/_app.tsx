@@ -31,20 +31,19 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  return getLayout(
+  return (
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
       theme={{
-        /** Put your mantine theme override here */
         colorScheme: "dark",
       }}
     >
-      <AuthContext.Provider value={firebaseApp}>
-        <MyApolloProvider>
-          <Component {...pageProps} />
-        </MyApolloProvider>
-      </AuthContext.Provider>
+      <MyApolloProvider>
+        <AuthContext.Provider value={firebaseApp}>
+          {getLayout(<Component {...pageProps} />)}
+        </AuthContext.Provider>
+      </MyApolloProvider>
     </MantineProvider>
   );
 }

@@ -26,3 +26,7 @@ h5 {
 h6 {
   @apply text-base;
 }
+
+a {
+  @apply text-inherit no-underline;
+}
