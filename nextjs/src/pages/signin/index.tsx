@@ -1,7 +1,10 @@
 import { LoginForm } from "@/components/Form/LoginForm";
+import { infoModalDefaultArgs } from "@/components/Modal/InfoModal";
 import { useAuth } from "@/hooks/useAuth";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { Box, Divider } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { FirebaseError } from "firebase/app";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,10 +15,32 @@ const SignIn: NextPageWithLayout = () => {
   const { signIn } = useAuth();
   const router = useRouter();
 
-  const onSubmit = (values: { email: string; pw: string }) => {
-    signIn(values.email, values.pw);
+  const onSubmit = async (values: { email: string; pw: string }) => {
+    try {
+      await signIn(values.email, values.pw);
+      router.replace("/");
+    } catch (e: unknown) {
+      if (e instanceof FirebaseError) {
+        if (e.code === "auth/user-not-found") {
+          modals.openContextModal({
+            ...infoModalDefaultArgs,
+            title: "ログインエラー",
+            innerProps: {
+              description: "ユーザーが見つかりませんでした",
+            },
+          });
+          return;
+        }
+      }
 
-    router.replace("/");
+      modals.openContextModal({
+        ...infoModalDefaultArgs,
+        title: "ログインエラー",
+        innerProps: {
+          description: "不明のエラーが発生しました",
+        },
+      });
+    }
   };
 
   return (

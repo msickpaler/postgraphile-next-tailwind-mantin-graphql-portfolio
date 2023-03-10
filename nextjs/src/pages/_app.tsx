@@ -6,6 +6,8 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import { MyApolloProvider } from "@/contexts/MyApolloPrivider";
+import { ModalsProvider } from "@mantine/modals";
+import { InfoModal } from "@/components/Modal/InfoModal";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -39,11 +41,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         colorScheme: "dark",
       }}
     >
-      <MyApolloProvider>
-        <AuthContext.Provider value={firebaseApp}>
-          {getLayout(<Component {...pageProps} />)}
-        </AuthContext.Provider>
-      </MyApolloProvider>
+      <ModalsProvider modals={{ info: InfoModal }}>
+        <MyApolloProvider>
+          <AuthContext.Provider value={firebaseApp}>
+            {getLayout(<Component {...pageProps} />)}
+          </AuthContext.Provider>
+        </MyApolloProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 }
