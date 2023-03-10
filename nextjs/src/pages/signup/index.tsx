@@ -74,7 +74,7 @@ const SignUp: NextPageWithLayout = () => {
           <Divider className="my-2" />
           <span className="text-sm">
             ログインは
-            <Link href="/login" className="underline">
+            <Link href="/signin" className="underline">
               こちら
             </Link>
           </span>

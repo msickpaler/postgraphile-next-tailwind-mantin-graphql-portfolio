@@ -165,7 +165,7 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         )}
         {/* 未ログイン */}
         {!user && !loadingUser && (
-          <Link href="/login">
+          <Link href="/signin">
             <Text
               className="my-1 ml-auto rounded-md px-2 py-1 text-sm font-bold"
               bg="blue"

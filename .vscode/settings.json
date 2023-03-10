@@ -4,6 +4,7 @@
 		"graphiql",
 		"Mantine",
 		"postgraphile",
+		"signin",
 		"signup",
 		"tailwindcss"
 	]
