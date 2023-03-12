@@ -6,6 +6,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { User } from "firebase/auth";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:3000/graphql",
@@ -16,21 +17,32 @@ export const MyApolloProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const createLink = (token: string | null) => {
-    const authLink = setContext((_, { headers }) => {
+  const createLink = (
+    token: string | null,
+    loadingUser: boolean,
+    getUserOnce: () => Promise<User | null>
+  ) => {
+    const authLink = setContext(async (_, { headers }) => {
+      const authorization =
+        headers?.authorization ||
+        (token
+          ? `Bearer ${token}`
+          : loadingUser
+          ? `Bearer ${await (await getUserOnce())?.getIdToken()}`
+          : "");
       return {
         headers: {
           ...headers,
-          authorization:
-            headers?.authorization || (token ? `Bearer ${token}` : ""),
+          authorization,
         },
       };
     });
     return authLink.concat(httpLink);
   };
-  const { token } = useAuth();
+
+  const { token, loadingUser, getUserOnce } = useAuth();
   const client = new ApolloClient({
-    link: createLink(token),
+    link: createLink(token, loadingUser, getUserOnce),
     cache: new InMemoryCache(),
   });
 

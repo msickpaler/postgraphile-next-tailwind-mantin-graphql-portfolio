@@ -53,6 +53,16 @@ export const useAuth = () => {
     await auth.signOut();
   };
 
+  // 非同期
+  const getUserOnce = () => {
+    return new Promise((resolve: (value: User | null) => void, reject) => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        unsubscribe();
+        resolve(user);
+      }, reject);
+    });
+  };
+
   return {
     token,
     user,
@@ -60,5 +70,6 @@ export const useAuth = () => {
     signUp,
     signIn,
     signOut,
+    getUserOnce,
   };
 };

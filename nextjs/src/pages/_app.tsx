@@ -42,11 +42,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       }}
     >
       <ModalsProvider modals={{ info: InfoModal }}>
-        <MyApolloProvider>
-          <AuthContext.Provider value={firebaseApp}>
+        <AuthContext.Provider value={firebaseApp}>
+          <MyApolloProvider>
             {getLayout(<Component {...pageProps} />)}
-          </AuthContext.Provider>
-        </MyApolloProvider>
+          </MyApolloProvider>
+        </AuthContext.Provider>
       </ModalsProvider>
     </MantineProvider>
   );
