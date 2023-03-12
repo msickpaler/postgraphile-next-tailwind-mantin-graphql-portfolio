@@ -39,6 +39,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       withNormalizeCSS
       theme={{
         colorScheme: "dark",
+        colors: {
+          transparent: ["transparent"],
+        },
       }}
     >
       <ModalsProvider modals={{ info: InfoModal }}>

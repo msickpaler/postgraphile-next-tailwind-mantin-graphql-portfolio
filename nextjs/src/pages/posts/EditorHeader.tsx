@@ -23,7 +23,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { ReactNode, useRef, useState } from "react";
-import { useScrollDirection } from "./useScrollDirection";
 
 const GET_USER_BY_ID_QUERY = gql`
   query getUserById($id: String!) {
@@ -44,7 +43,7 @@ const UPDATE_USER_MUTATION = gql`
   }
 `;
 
-export const GlobalHeader = ({ children }: { children: ReactNode }) => {
+export const EditorHeader = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const { user, loadingUser, signOut } = useAuth();
   const client = useApolloClient();
@@ -86,9 +85,6 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
       },
     }
   );
-
-  const headerRef = useRef<HTMLDivElement>(null);
-  useScrollDirection(headerRef);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const [isSettingOpen, handler] = useDisclosure(false);
@@ -147,10 +143,7 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex flex-col">
-      <header
-        className="sticky top-0 h-12 flex items-center justify-end transition-all px-2 backdrop-blur-md z-50 border-0 border-b border-neutral-700 border-solid"
-        ref={headerRef}
-      >
+      <header className="sticky top-0 h-12 flex items-center justify-end transition-all px-2 backdrop-blur-md z-50 border-0 border-b border-neutral-700 border-solid">
         <Link className="mr-auto font-bold" href="/">
           <h3>gamelog</h3>
         </Link>
