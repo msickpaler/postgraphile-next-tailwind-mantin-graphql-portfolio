@@ -152,7 +152,7 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         ref={headerRef}
       >
         <Link className="mr-auto font-bold" href="/">
-          <h3>gamelog</h3>
+          <h1>gamelog</h1>
         </Link>
 
         {/* 読込中 */}
