@@ -66,7 +66,7 @@ const PostCreate: NextPageWithLayout = () => {
   };
 
   const handleChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTitle(e.target.value);
+    setBody(e.target.value);
   };
 
   const onClickBack = () => {

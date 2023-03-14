@@ -83,7 +83,7 @@ const PostEdit: NextPageWithLayout<Props> = ({ post }: Props) => {
   };
 
   const handleChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTitle(e.target.value);
+    setBody(e.target.value);
   };
 
   const onClickBack = () => {
