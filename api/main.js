@@ -31,7 +31,6 @@ app.use(
       retryOnInitFail: true,
       exportGqlSchemaPath: "schema.graphql",
       pgSettings: async (req) => {
-        console.log("req.headers.authorization", req.headers.authorization);
         const token = req.headers.authorization
           ? req.headers.authorization.split("Bearer ")[1]
           : "";
