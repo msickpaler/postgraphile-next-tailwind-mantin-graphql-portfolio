@@ -122,7 +122,6 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
 
   const onSubmit = () => {
     const input: UpdateUserByIdInput = {
-      // nodeId: "test",
       id: user?.uid ?? "",
       userPatch: {
         name: form.values.name,
@@ -152,7 +151,13 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         ref={headerRef}
       >
         <Link className="mr-auto font-bold" href="/">
-          <h1>gamelog</h1>
+          <Text
+            fw="bold"
+            className="text-3xl"
+            component={router.pathname === "/" ? "h1" : "h2"}
+          >
+            gamelog
+          </Text>
         </Link>
 
         {/* 読込中 */}

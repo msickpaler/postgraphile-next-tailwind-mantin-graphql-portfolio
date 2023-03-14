@@ -33,8 +33,10 @@ app.use(
       retryOnInitFail: true,
       exportGqlSchemaPath: "schema.graphql",
       pgSettings: async (req) => {
-        const token = req.headers.authorization.split("Bearer ")[1];
-        const decodedToken = await auth.verifyIdToken(token);
+        const token = req.headers.authorization
+          ? req.headers.authorization.split("Bearer ")[1]
+          : "";
+        const decodedToken = token ? await auth.verifyIdToken(token) : "";
         return {
           role: process.env.DB_WRITE_USER,
           "jwt.claims.uid": decodedToken.uid,
