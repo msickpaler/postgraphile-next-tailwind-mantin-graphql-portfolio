@@ -9,7 +9,7 @@ import { setContext } from "@apollo/client/link/context";
 import { User } from "firebase/auth";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:3000/graphql",
+  uri: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
 });
 
 const createLink = (

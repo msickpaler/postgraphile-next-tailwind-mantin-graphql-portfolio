@@ -1,5 +1,4 @@
 const express = require("express");
-const { applicationDefault } = require("firebase-admin/app");
 const admin = require("firebase-admin");
 const { postgraphile } = require("postgraphile");
 const config = require("./config/config.js");
@@ -9,7 +8,6 @@ const app = express();
 
 admin.initializeApp({
   projectId: process.env.FIREBASE_PROJECT_ID,
-  credential: applicationDefault(),
 });
 const auth = admin.auth();
 
@@ -33,6 +31,7 @@ app.use(
       retryOnInitFail: true,
       exportGqlSchemaPath: "schema.graphql",
       pgSettings: async (req) => {
+        console.log("req.headers.authorization", req.headers.authorization);
         const token = req.headers.authorization
           ? req.headers.authorization.split("Bearer ")[1]
           : "";

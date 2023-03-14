@@ -1,4 +1,5 @@
 ALTER TABLE core.User ENABLE ROW LEVEL SECURITY;
+ALTER TABLE core.Post ENABLE ROW LEVEL SECURITY;
 
 create function current_uid() returns VARCHAR as $$
 select
