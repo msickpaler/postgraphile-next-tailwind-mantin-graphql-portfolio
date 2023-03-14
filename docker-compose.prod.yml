@@ -20,6 +20,7 @@ services:
       DB_WRITE_PASS: $DB_WRITE_PASS
       DB_DEFAULT_SCHEMA: $DB_DEFAULT_SCHEMA
       FIREBASE_PROJECT_ID: $FIREBASE_PROJECT_ID
+      WEB_HOST: $WEB_HOST
     volumes:
       - /usr/src/api/node_modules # Saves the node modules so it does not have to re-install
       - ./api:/usr/src/api # Mounts the host folder(s) onto the docker container for live development
