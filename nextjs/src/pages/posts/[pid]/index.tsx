@@ -158,7 +158,9 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
             )}
           </Group>
 
-          <Text className="break-all mt-12">{post.body}</Text>
+          <Text className="break-all mt-12 whitespace-pre-wrap">
+            {post.body}
+          </Text>
         </article>
       </Box>
     </>
