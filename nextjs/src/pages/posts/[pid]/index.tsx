@@ -1,13 +1,16 @@
+import { infoModalDefaultArgs } from "@/components/Modal/InfoModal";
 import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 import { useAuth } from "@/hooks/useAuth";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { checkSafeInteger } from "@/lib/check-safe-integer";
 import { formatToJP } from "@/lib/format-to-jp";
 import { Post, Query } from "@/types/graphql";
-import { gql } from "@apollo/client";
-import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
+import { gql, useMutation } from "@apollo/client";
+import { Avatar, Box, Button, Group, Stack, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 const GET_POST_BY_ID_QUERY = gql`
@@ -38,8 +41,71 @@ const GET_ALL_POSTS_QUERY = gql`
   }
 `;
 
+const DELETE_POST_MUTATION = gql`
+  mutation deletePostById($input: DeletePostByIdInput!) {
+    deletePostById(input: $input) {
+      deletedPostId
+    }
+  }
+`;
+
 const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
+  const router = useRouter();
   const { user } = useAuth();
+
+  const [deletePostById] = useMutation(DELETE_POST_MUTATION, {
+    onCompleted: async () => {
+      try {
+        router.replace("/");
+      } catch (e) {
+        modals.openContextModal({
+          ...infoModalDefaultArgs,
+          title: "削除エラー",
+          innerProps: {
+            description: "不明のエラーが発生しました",
+          },
+        });
+      }
+    },
+    onError: (e) => {
+      console.log("e", e);
+      modals.openContextModal({
+        ...infoModalDefaultArgs,
+        title: "削除エラー",
+        innerProps: {
+          description: "不明のエラーが発生しました",
+        },
+      });
+    },
+  });
+
+  const deletePost = () => {
+    deletePostById({
+      variables: {
+        input: {
+          id: post.id,
+        },
+      },
+    });
+  };
+
+  const onClickDelete = () => {
+    modals.openConfirmModal({
+      title: "投稿の削除",
+      children: (
+        <>
+          <Text size="sm">以下の投稿を削除します。よろしいですか？</Text>
+          <Text size="sm" fw="bold" my="xs">
+            {post.title}
+          </Text>
+        </>
+      ),
+      centered: true,
+      labels: { confirm: "削除", cancel: "キャンセル" },
+      confirmProps: { color: "red" },
+      onConfirm: deletePost,
+    });
+  };
 
   if (!post) {
     return null;
@@ -56,7 +122,7 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
       <Box mx="md">
         <article className="max-w-3xl mt-24 mx-auto">
           <h1 className="break-all mb-2">{post.title}</h1>
-          <Group align="center">
+          <Group align="center" noWrap>
             <Avatar
               // transparentにしている分、余分な空白があるため、マイナスマージンを使用して調整
               mr={-10}
@@ -64,7 +130,7 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
               color="transparent"
             />
             <Stack spacing={0}>
-              <Text size="sm" className="break-all">
+              <Text size="sm" className="break-all" lineClamp={1}>
                 {authorName}
               </Text>
               <Text size="sm" className="break-all">
@@ -72,15 +138,23 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
               </Text>
             </Stack>
             {user?.uid && post?.authorId && user?.uid === post.authorId && (
-              <Link className="ml-auto" href={`/posts/${post.id}/edit`}>
-                <Text
-                  className="rounded-[4px] px-4 py-[0.55rem] text-sm font-bold text-center hover:opacity-80"
-                  bg="blue"
-                  color="white"
+              <>
+                <Link
+                  className="ml-auto flex-shrink-0"
+                  href={`/posts/${post.id}/edit`}
                 >
-                  編集
-                </Text>
-              </Link>
+                  <Text
+                    className="rounded-[4px] px-[1.125rem] py-[0.5rem] text-sm font-bold text-center hover:opacity-80"
+                    bg="blue"
+                    color="white"
+                  >
+                    編集
+                  </Text>
+                </Link>
+                <Button color="red" onClick={onClickDelete}>
+                  削除
+                </Button>
+              </>
             )}
           </Group>
 
