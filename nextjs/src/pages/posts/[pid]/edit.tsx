@@ -1,6 +1,6 @@
 import { PostForm } from "@/components/Form/PostForm";
 import { infoModalDefaultArgs } from "@/components/Modal/InfoModal";
-import { serverSideApolloClient } from "@/contexts/MyApolloPrivider";
+import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 import { useAuth } from "@/hooks/useAuth";
 import { checkSafeInteger } from "@/lib/check-safe-integer";
 import { UpdatePostByIdInput, Post, Query } from "@/types/graphql";

@@ -1,4 +1,4 @@
-import { serverSideApolloClient } from "@/contexts/MyApolloPrivider";
+import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 import { useAuth } from "@/hooks/useAuth";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { checkSafeInteger } from "@/lib/check-safe-integer";

@@ -5,7 +5,7 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
-import { MyApolloProvider } from "@/contexts/MyApolloPrivider";
+import { MyApolloProvider } from "@/contexts/MyApolloProvider";
 import { ModalsProvider } from "@mantine/modals";
 import { InfoModal } from "@/components/Modal/InfoModal";
 
