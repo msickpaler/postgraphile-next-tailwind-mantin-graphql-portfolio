@@ -9,6 +9,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { NextPageWithLayout } from "../../_app";
+import { EditorHeader } from "../EditorHeader";
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!) {
@@ -99,19 +100,11 @@ const PostCreate: NextPageWithLayout = () => {
         <title>編集画面</title>
       </Head>
       <Flex direction="column">
-        <Header
-          height="auto"
-          p="xs"
-          className="sticky flex items-center justify-end border-solid border-0 border-b border-neutral-700 backdrop-blur-md z-50"
-          top={0}
-        >
-          <Button fz="xl" mr="auto" color="transparent" onClick={onClickBack}>
-            ←
-          </Button>
-          <Button onClick={onClickSave} disabled={!isValid}>
-            保存
-          </Button>
-        </Header>
+        <EditorHeader
+          onClickBack={onClickBack}
+          onClickSave={onClickSave}
+          disabled={!isValid}
+        />
         <Grid m={0} px="xs" pt="xl">
           <Grid.Col sm={3} className="hidden sm:block" />
           <Grid.Col sm={6} p={0} className="flex flex-col gap-2">
