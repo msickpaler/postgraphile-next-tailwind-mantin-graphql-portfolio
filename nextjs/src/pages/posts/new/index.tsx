@@ -9,7 +9,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { NextPageWithLayout } from "../../_app";
-import { EditorHeader } from "../EditorHeader";
+import { EditorHeader } from "../../../components/Header/EditorHeader";
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!) {

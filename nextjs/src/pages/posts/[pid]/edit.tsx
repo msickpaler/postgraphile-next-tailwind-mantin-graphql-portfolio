@@ -11,7 +11,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { NextPageWithLayout } from "../../_app";
-import { EditorHeader } from "../EditorHeader";
+import { EditorHeader } from "../../../components/Header/EditorHeader";
 
 const GET_POST_BY_ID_QUERY = gql`
   query getPostById($id: Int!) {
