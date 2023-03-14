@@ -47,7 +47,7 @@ const PostCreate: NextPageWithLayout = () => {
     onError: () => {
       modals.openContextModal({
         ...infoModalDefaultArgs,
-        title: "登録エラー",
+        title: "作成エラー",
         innerProps: {
           description: "不明のエラーが発生しました",
         },

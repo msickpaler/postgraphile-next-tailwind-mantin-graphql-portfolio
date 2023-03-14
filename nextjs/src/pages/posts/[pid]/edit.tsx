@@ -64,7 +64,7 @@ const PostEdit: NextPageWithLayout<Props> = ({ post }: Props) => {
     onError: () => {
       modals.openContextModal({
         ...infoModalDefaultArgs,
-        title: "登録エラー",
+        title: "更新エラー",
         innerProps: {
           description: "不明のエラーが発生しました",
         },

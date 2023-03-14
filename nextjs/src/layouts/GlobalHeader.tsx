@@ -1,3 +1,4 @@
+import { infoModalDefaultArgs } from "@/components/Modal/InfoModal";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Mutation,
@@ -19,6 +20,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -66,7 +68,13 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         refetch();
       },
       onError: (e) => {
-        console.error("e", e);
+        modals.openContextModal({
+          ...infoModalDefaultArgs,
+          title: "更新エラー",
+          innerProps: {
+            description: "不明のエラーが発生しました",
+          },
+        });
       },
       update: (cache, { data }) => {
         const result = data?.updateUserById;
