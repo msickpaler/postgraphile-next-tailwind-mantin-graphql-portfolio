@@ -1,4 +1,5 @@
 import { serverSideApolloClient } from "@/contexts/MyApolloPrivider";
+import { useAuth } from "@/hooks/useAuth";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { checkSafeInteger } from "@/lib/check-safe-integer";
 import { formatToJP } from "@/lib/format-to-jp";
@@ -6,15 +7,18 @@ import { Post, Query } from "@/types/graphql";
 import { gql } from "@apollo/client";
 import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
 import Head from "next/head";
+import Link from "next/link";
 import { ReactElement } from "react";
 
 const GET_POST_BY_ID_QUERY = gql`
   query getPostById($id: Int!) {
     postById(id: $id) {
+      id
       title
       body
       createdAt
       updatedAt
+      authorId
       userByAuthorId {
         name
       }
@@ -35,6 +39,8 @@ const GET_ALL_POSTS_QUERY = gql`
 `;
 
 const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
+  const { user } = useAuth();
+
   if (!post) {
     return null;
   }
@@ -50,7 +56,7 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
       <Box mx="md">
         <article className="max-w-3xl mt-24 mx-auto">
           <h1 className="break-all mb-2">{post.title}</h1>
-          <Group>
+          <Group align="center">
             <Avatar
               // transparentにしている分、余分な空白があるため、マイナスマージンを使用して調整
               mr={-10}
@@ -65,7 +71,19 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
                 {formatToJP(post.createdAt, true)}
               </Text>
             </Stack>
+            {user?.uid && post?.authorId && user?.uid === post.authorId && (
+              <Link className="ml-auto" href={`/posts/${post.id}/edit`}>
+                <Text
+                  className="rounded-[4px] px-4 py-[0.55rem] text-sm font-bold text-center hover:opacity-80"
+                  bg="blue"
+                  color="white"
+                >
+                  編集
+                </Text>
+              </Link>
+            )}
           </Group>
+
           <Text className="break-all mt-12">{post.body}</Text>
         </article>
       </Box>
@@ -94,6 +112,8 @@ export const getStaticProps = async ({
     variables: {
       id,
     },
+    // next.jsのキャッシュを使うので、graphQLのキャッシュは無効化
+    fetchPolicy: "no-cache",
   });
 
   if (!data.postById) {
@@ -106,13 +126,15 @@ export const getStaticProps = async ({
       post: data.postById,
       authorName: data.postById.userByAuthorId?.name ?? "",
     },
-    revalidate: 60,
+    revalidate: 60, // seconds
   };
 };
 
 export const getStaticPaths = async () => {
   const { data } = await serverSideApolloClient.query<Pick<Query, "allPosts">>({
     query: GET_ALL_POSTS_QUERY,
+    // next.jsのキャッシュを使うので、graphQLのキャッシュは無効化
+    fetchPolicy: "no-cache",
   });
   const ids = data?.allPosts?.edges.map((edge) => edge.node?.id) ?? [];
   return {

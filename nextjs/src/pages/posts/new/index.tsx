@@ -1,3 +1,4 @@
+import { PostForm } from "@/components/Form/PostForm";
 import { infoModalDefaultArgs } from "@/components/Modal/InfoModal";
 import { useAuth } from "@/hooks/useAuth";
 import { CreatePostInput } from "@/types/graphql";
@@ -63,6 +64,10 @@ const PostCreate: NextPageWithLayout = () => {
     }
   };
 
+  const handleChangeBody = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTitle(e.target.value);
+  };
+
   const onClickBack = () => {
     router.back();
   };
@@ -110,39 +115,12 @@ const PostCreate: NextPageWithLayout = () => {
         <Grid m={0} px="xs" pt="xl">
           <Grid.Col sm={3} className="hidden sm:block" />
           <Grid.Col sm={6} p={0} className="flex flex-col gap-2">
-            <Textarea
-              value={title}
-              onChange={handleChangeTitle}
-              placeholder="タイトル"
-              maxLength={255}
-              autosize
-              size="xl"
-              variant="unstyled"
+            <PostForm
+              title={title}
+              body={body}
+              handleChangeTitle={handleChangeTitle}
+              handleChangeBody={handleChangeBody}
             />
-            <Box pos="relative">
-              <Textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="本文"
-                maxLength={255}
-                autosize
-                variant="filled"
-                classNames={{
-                  // borderはもともと透明のものを可視化してるようなのでnoneではなくtransparentでレイアウトを維持する
-                  input: "focus-visible:border-transparent",
-                }}
-                minRows={10}
-              />
-              <Box
-                pos="absolute"
-                right={8}
-                bottom={4}
-                fz="sm"
-                className="text-neutral-500"
-              >
-                {body.length}/{BODY_MAX_LENGTH}
-              </Box>
-            </Box>
           </Grid.Col>
           <Grid.Col sm={3} className="hidden sm:block" />
         </Grid>

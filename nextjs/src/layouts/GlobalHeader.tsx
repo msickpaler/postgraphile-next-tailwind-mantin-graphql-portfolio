@@ -167,7 +167,7 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
           <>
             <Link href="/posts/new">
               <Text
-                className="rounded-md px-2 py-1 text-sm font-bold"
+                className="rounded-md px-2 py-1 text-sm font-bold hover:opacity-80"
                 bg="blue"
                 color="white"
               >
