@@ -29,7 +29,7 @@ export const PostForm = ({
           value={body}
           onChange={handleChangeBody}
           placeholder="本文"
-          maxLength={255}
+          maxLength={BODY_MAX_LENGTH}
           autosize
           variant="filled"
           classNames={{
