@@ -17,9 +17,10 @@ import {
   Text,
   TextInput,
   UnstyledButton,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -95,6 +96,9 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
     }
   );
 
+  const theme = useMantineTheme();
+  const largeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
+
   const headerRef = useRef<HTMLDivElement>(null);
   useScrollDirection(headerRef);
 
@@ -125,7 +129,10 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
 
   const onClickEdit = () => {
     setReadOnly(false);
-    nameRef.current?.focus();
+    // スマホかどうか見たいので本来はuserAgentの判定が必要
+    if (largeScreen) {
+      nameRef.current?.focus();
+    }
   };
 
   const onSubmit = () => {
