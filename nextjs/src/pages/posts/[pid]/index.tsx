@@ -206,12 +206,16 @@ export const getStaticProps = async ({
 
 export const getStaticPaths = async () => {
   console.log(`start`);
-  const { data } = await serverSideApolloClient.query<Pick<Query, "allPosts">>({
+  const { data, error, errors } = await serverSideApolloClient.query<
+    Pick<Query, "allPosts">
+  >({
     query: GET_ALL_POSTS_QUERY,
     // next.jsのキャッシュを使うので、graphQLのキャッシュは無効化
     fetchPolicy: "no-cache",
   });
   console.log("data", data);
+  console.log("error", error);
+  console.log("errors", errors);
   const ids = data?.allPosts?.edges.map((edge) => edge.node?.id) ?? [];
   return {
     paths: ids
