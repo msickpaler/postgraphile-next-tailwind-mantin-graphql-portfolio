@@ -12,7 +12,7 @@ admin.initializeApp({
 const auth = admin.auth();
 
 const corsOptions = {
-  origin: "http://localhost:3001",
+  origin: process.env.WEB_HOST,
 };
 app.use(cors(corsOptions));
 
