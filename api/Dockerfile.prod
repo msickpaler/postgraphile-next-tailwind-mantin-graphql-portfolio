@@ -6,6 +6,8 @@
 # Set up base node image
 FROM node:16-alpine
 
+ENV NODE_ENV=production
+
 # Set up the Docker Working Directory
 ENV HOME=/usr/src/api
 RUN mkdir -p $HOME
