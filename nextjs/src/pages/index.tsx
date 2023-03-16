@@ -11,7 +11,7 @@ import { SimplePostCard } from "@/components/Card/SimplePostCard";
 import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 
 const GET_NEW_POSTS_QUERY = gql`
-  query getUserById {
+  query getNewPosts {
     allPosts(first: 10, orderBy: CREATED_AT_DESC) {
       edges {
         node {
