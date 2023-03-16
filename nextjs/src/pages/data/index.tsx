@@ -2,6 +2,7 @@ import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { Query } from "@/types/graphql";
 import { gql } from "@apollo/client";
+import { Text, Center, Stack } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { ReactElement, useEffect, useState } from "react";
 
@@ -25,19 +26,51 @@ const GET_NEW_POSTS_QUERY = gql`
 
 const DataPage = ({
   dataByMonthArr,
+  totalCount,
 }: {
   dataByMonthArr: { month: string; count: number }[];
+  totalCount: number;
 }) => {
   const config = {
     data: dataByMonthArr,
     xField: "month",
     yField: "count",
     xAxis: {
+      title: {
+        text: "投稿日",
+      },
+    },
+    yAxis: {
+      title: {
+        text: "投稿数",
+      },
       tickCount: 5,
     },
   };
 
-  return <Line {...config} />;
+  return (
+    <main>
+      <Center>
+        <h1>データ</h1>
+      </Center>
+      <Stack align="center" spacing={0} mb="xl">
+        <h2>総投稿数</h2>
+        <Text
+          sx={(theme) => ({
+            background: theme.fn.gradient(),
+          })}
+          className="bg-clip-text text-transparent text-3xl"
+        >
+          {totalCount.toLocaleString()}
+        </Text>
+      </Stack>
+
+      <Center>
+        <h3>月別投稿数</h3>
+      </Center>
+      <Line {...config} className="px-12" />
+    </main>
+  );
 };
 
 export const getStaticProps = async () => {
