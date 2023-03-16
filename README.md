@@ -48,3 +48,5 @@
 - next.js のフォント最適化: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/5da04f755e7a93b208f2c0b88ea74922b027b2b0/nextjs/src/pages/_app.tsx#L34
 
 - Mantine のデフォルトテーマのカスタマイズ: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/5da04f755e7a93b208f2c0b88ea74922b027b2b0/nextjs/src/pages/_app.tsx#L46
+
+- debounce を使った自動保存: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/535fe369a5ea9345b7d9c3cd03126a49b6ce10d2/nextjs/src/layouts/GlobalHeader.tsx#L109
