@@ -3,11 +3,12 @@ import { NextPageWithLayout } from "./_app";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { ReactElement } from "react";
 import { Box, Group, MediaQuery } from "@mantine/core";
-import { gql, useQuery } from "@apollo/client";
-import { Query, QueryAllPostsArgs } from "@/types/graphql";
+import { gql } from "@apollo/client";
+import { Post, Query } from "@/types/graphql";
 import Link from "next/link";
 import { Carousel } from "@mantine/carousel";
 import { SimplePostCard } from "@/components/Card/SimplePostCard";
+import { serverSideApolloClient } from "@/contexts/MyApolloProvider";
 
 const GET_NEW_POSTS_QUERY = gql`
   query getUserById {
@@ -26,11 +27,11 @@ const GET_NEW_POSTS_QUERY = gql`
   }
 `;
 
-const Home: NextPageWithLayout = () => {
-  const { data } = useQuery<Pick<Query, "allPosts">, QueryAllPostsArgs>(
-    GET_NEW_POSTS_QUERY
-  );
+type Props = {
+  posts: Post[];
+};
 
+const Home: NextPageWithLayout<Props> = ({ posts }: Props) => {
   return (
     <>
       <Head>
@@ -52,13 +53,13 @@ const Home: NextPageWithLayout = () => {
               slideSize="80%"
               slideGap="sm"
             >
-              {data?.allPosts?.edges.map((edge) => (
-                <Carousel.Slide key={edge?.node?.id}>
-                  <Link href={`/posts/${edge?.node?.id}`}>
+              {posts.map((edge) => (
+                <Carousel.Slide key={edge.id}>
+                  <Link href={`/posts/${edge.id}`}>
                     <SimplePostCard
-                      title={edge?.node?.title ?? ""}
-                      authorName={edge?.node?.userByAuthorId?.name ?? ""}
-                      createdAt={edge?.node?.createdAt ?? ""}
+                      title={edge.title ?? ""}
+                      authorName={edge.userByAuthorId?.name ?? ""}
+                      createdAt={edge.createdAt ?? ""}
                       h={160}
                     />
                   </Link>
@@ -68,12 +69,12 @@ const Home: NextPageWithLayout = () => {
           </MediaQuery>
           <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
             <Group mx="auto">
-              {data?.allPosts?.edges.map((edge) => (
-                <Link href={`/posts/${edge?.node?.id}`} key={edge?.node?.id}>
+              {posts.map((edge) => (
+                <Link href={`/posts/${edge.id}`} key={edge.id}>
                   <SimplePostCard
-                    title={edge?.node?.title ?? ""}
-                    authorName={edge?.node?.userByAuthorId?.name ?? ""}
-                    createdAt={edge?.node?.createdAt ?? ""}
+                    title={edge.title ?? ""}
+                    authorName={edge.userByAuthorId?.name ?? ""}
+                    createdAt={edge.createdAt ?? ""}
                     w={260}
                     h={160}
                   />
@@ -89,6 +90,30 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return <GlobalHeader>{page}</GlobalHeader>;
+};
+
+export const getStaticProps = async () => {
+  const { data } = await serverSideApolloClient.query<Pick<Query, "allPosts">>({
+    query: GET_NEW_POSTS_QUERY,
+    // next.jsのキャッシュを使うので、graphQLのキャッシュは無効化
+    fetchPolicy: "no-cache",
+  });
+
+  if (!data.allPosts) {
+    return {
+      notFound: true,
+    };
+  }
+  const posts = data.allPosts.edges
+    .map((edge) => edge.node)
+    .filter((node): node is NonNullable<typeof node> => !!node);
+
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 120, // seconds
+  };
 };
 
 export default Home;
