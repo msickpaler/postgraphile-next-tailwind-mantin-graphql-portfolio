@@ -108,10 +108,12 @@ export const getStaticProps = async () => {
     return acc;
   }, {} as Record<string, number>);
 
-  const dataByMonthArr = Object.entries(dataByMonth).map(([month, count]) => ({
-    month,
-    count,
-  }));
+  const dataByMonthArr = Object.entries(dataByMonth)
+    .map(([month, count]) => ({
+      month,
+      count,
+    }))
+    .sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime());
 
   return {
     props: {
