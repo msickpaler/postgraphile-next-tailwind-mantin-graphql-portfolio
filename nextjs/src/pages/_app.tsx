@@ -9,6 +9,7 @@ import { MyApolloProvider } from "@/contexts/MyApolloProvider";
 import { ModalsProvider } from "@mantine/modals";
 import { InfoModal } from "@/components/Modal/InfoModal";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -40,42 +41,50 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      theme={{
-        colorScheme: "dark",
-        colors: {
-          transparent: ["transparent"],
-        },
-        components: {
-          TextInput: {
-            defaultProps: {
-              size: "md",
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+      </Head>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          colorScheme: "dark",
+          colors: {
+            transparent: ["transparent"],
+          },
+          components: {
+            TextInput: {
+              defaultProps: {
+                size: "md",
+              },
+            },
+            PasswordInput: {
+              defaultProps: {
+                size: "md",
+              },
+            },
+            Textarea: {
+              defaultProps: {
+                size: "md",
+              },
             },
           },
-          PasswordInput: {
-            defaultProps: {
-              size: "md",
-            },
-          },
-          Textarea: {
-            defaultProps: {
-              size: "md",
-            },
-          },
-        },
-      }}
-    >
-      <ModalsProvider modals={{ info: InfoModal }}>
-        <AuthContext.Provider value={firebaseApp}>
-          <MyApolloProvider>
-            <div className={`${inter.variable} font-sans`}>
-              {getLayout(<Component {...pageProps} />)}
-            </div>
-          </MyApolloProvider>
-        </AuthContext.Provider>
-      </ModalsProvider>
-    </MantineProvider>
+        }}
+      >
+        <ModalsProvider modals={{ info: InfoModal }}>
+          <AuthContext.Provider value={firebaseApp}>
+            <MyApolloProvider>
+              <div className={`${inter.variable} font-sans`}>
+                {getLayout(<Component {...pageProps} />)}
+              </div>
+            </MyApolloProvider>
+          </AuthContext.Provider>
+        </ModalsProvider>
+      </MantineProvider>
+    </>
   );
 }
