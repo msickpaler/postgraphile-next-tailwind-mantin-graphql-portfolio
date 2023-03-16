@@ -167,13 +167,18 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         height="auto"
         ref={headerRef}
       >
-        <Link className="mr-auto font-bold" href="/">
+        <Link className="mr-4 font-bold" href="/">
           <Text
             fw="bold"
             className="text-3xl my-0"
             component={router.pathname === "/" ? "h1" : "h2"}
           >
             gamelog
+          </Text>
+        </Link>
+        <Link className="mr-auto font-bold" href="/data">
+          <Text fw="bold" className="text-xl my-0 underline">
+            data
           </Text>
         </Link>
 
