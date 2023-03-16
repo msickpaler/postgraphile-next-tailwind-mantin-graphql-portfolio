@@ -41,8 +41,8 @@ const PostCreate: NextPageWithLayout = () => {
     body.length <= BODY_MAX_LENGTH;
 
   const [createPost] = useMutation(CREATE_POST_MUTATION, {
-    onCompleted: async () => {
-      router.replace("/");
+    onCompleted: async (result) => {
+      router.replace(`/posts/${result.createPost.post.id}`);
     },
     onError: () => {
       modals.openContextModal({

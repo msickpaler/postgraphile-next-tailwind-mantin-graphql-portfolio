@@ -81,8 +81,6 @@ const DeleteUser: NextPageWithLayout = () => {
       },
     });
 
-    // TODO firebaseも削除
-
     router.replace("/");
   };
 

@@ -56,7 +56,7 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
   const [deletePostById] = useMutation(DELETE_POST_MUTATION, {
     onCompleted: async () => {
       try {
-        router.replace("/");
+        router.push("/");
       } catch (e) {
         modals.openContextModal({
           ...infoModalDefaultArgs,

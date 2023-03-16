@@ -59,7 +59,7 @@ const PostEdit: NextPageWithLayout<Props> = ({ post }: Props) => {
 
   const [updatePost] = useMutation(UPDATE_POST_MUTATION, {
     onCompleted: async () => {
-      router.replace("/");
+      router.push(`/posts/${post.id}`);
     },
     onError: () => {
       modals.openContextModal({
