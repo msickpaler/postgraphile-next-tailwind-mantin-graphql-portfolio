@@ -125,18 +125,18 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
               </Text>
             </Stack>
             {user?.uid && post?.authorId && user?.uid === post.authorId && (
-              <>
+              <Group spacing={8}>
                 <Button component={Link} href={`/posts/${post.id}/edit`}>
                   編集
                 </Button>
                 <Button color="red" onClick={onClickDelete}>
                   削除
                 </Button>
-              </>
+              </Group>
             )}
           </Group>
 
-          <Text className="break-all mt-12 whitespace-pre-wrap">
+          <Text className="break-all my-12 whitespace-pre-wrap">
             {post.body}
           </Text>
         </article>
