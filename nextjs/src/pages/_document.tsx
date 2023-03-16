@@ -14,6 +14,7 @@ export default class _Document extends Document {
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
           />
+          <link rel="icon" href="/msickpaler8.jpeg" />
         </Head>
         <body>
           <Main />
