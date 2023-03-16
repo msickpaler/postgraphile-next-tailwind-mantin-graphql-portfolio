@@ -54,18 +54,8 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
   const { user } = useAuth();
 
   const [deletePostById] = useMutation(DELETE_POST_MUTATION, {
-    onCompleted: async () => {
-      try {
-        router.push("/");
-      } catch (e) {
-        modals.openContextModal({
-          ...infoModalDefaultArgs,
-          title: "削除エラー",
-          innerProps: {
-            description: "不明のエラーが発生しました",
-          },
-        });
-      }
+    onCompleted: () => {
+      router.push("/");
     },
     onError: (e) => {
       modals.openContextModal({
