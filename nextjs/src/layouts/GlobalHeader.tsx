@@ -11,21 +11,22 @@ import {
   Avatar,
   Box,
   Button,
-  Flex,
+  CheckIcon,
   Group,
+  Header,
+  Loader,
   Modal,
+  Stack,
   Text,
   TextInput,
   UnstyledButton,
-  useMantineTheme,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useScrollDirection } from "./useScrollDirection";
 
 const GET_USER_BY_ID_QUERY = gql`
@@ -61,57 +62,83 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  const [updateUserById] = useMutation<Pick<Mutation, "updateUserById">>(
-    UPDATE_USER_MUTATION,
-    {
-      onCompleted: async () => {
-        // キャッシュの更新を反映
-        refetch();
-      },
-      onError: (e) => {
-        modals.openContextModal({
-          ...infoModalDefaultArgs,
-          title: "更新エラー",
-          innerProps: {
-            description: "不明のエラーが発生しました",
-          },
-        });
-      },
-      update: (cache, { data }) => {
-        const result = data?.updateUserById;
-        const userCache = cache.readQuery<Pick<Query, "userById">>({
-          query: GET_USER_BY_ID_QUERY,
-        });
+  const [succeeded, setSucceeded] = useState(false);
+  const [updateUserById, { loading }] = useMutation<
+    Pick<Mutation, "updateUserById">
+  >(UPDATE_USER_MUTATION, {
+    onCompleted: async () => {
+      // キャッシュの更新を反映
+      refetch();
+      setSucceeded(true);
+      setTimeout(() => {
+        setSucceeded(false);
+      }, 2000);
+    },
+    onError: (e) => {
+      modals.openContextModal({
+        ...infoModalDefaultArgs,
+        title: "更新エラー",
+        innerProps: {
+          description: "不明のエラーが発生しました",
+        },
+      });
+    },
+    update: (cache, { data }) => {
+      const result = data?.updateUserById;
+      const userCache = cache.readQuery<Pick<Query, "userById">>({
+        query: GET_USER_BY_ID_QUERY,
+      });
 
-        cache.writeQuery({
-          query: GET_USER_BY_ID_QUERY,
-          data: {
-            userById: {
-              ...userCache?.userById,
-              ...result?.user,
-            },
+      cache.writeQuery({
+        query: GET_USER_BY_ID_QUERY,
+        data: {
+          userById: {
+            ...userCache?.userById,
+            ...result?.user,
           },
-        });
-      },
-    }
-  );
-
-  const theme = useMantineTheme();
-  const largeScreen = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
+        },
+      });
+    },
+  });
 
   const headerRef = useRef<HTMLDivElement>(null);
   useScrollDirection(headerRef);
 
-  const nameRef = useRef<HTMLInputElement>(null);
   const [isSettingOpen, handler] = useDisclosure(false);
-  const [readOnly, setReadOnly] = useState(true);
 
-  const form = useForm({
-    initialValues: { name: "" },
-    validate: {
-      name: (value) => (value ? null : "名前は必須です"),
-    },
-  });
+  const [userName, setUserName] = useState("");
+  const [debouncedName] = useDebouncedValue(userName, 800);
+
+  const [inputtedAtLeastOnce, setInputtedAtLeastOnce] = useState(false);
+  const showValidationMsg =
+    inputtedAtLeastOnce && (userName.length === 0 || userName.length > 255);
+
+  const isValidDebouncedName =
+    0 < debouncedName.length && debouncedName.length <= 255;
+
+  useEffect(() => {
+    if (!isValidDebouncedName) {
+      return;
+    }
+
+    const input: UpdateUserByIdInput = {
+      id: user?.uid ?? "",
+      userPatch: {
+        name: debouncedName,
+      },
+    };
+    updateUserById({
+      variables: {
+        input,
+      },
+    });
+  }, [
+    debouncedName,
+    inputtedAtLeastOnce,
+    isValidDebouncedName,
+    updateUserById,
+    user?.uid,
+  ]);
 
   const onClickLogout = async () => {
     await Promise.all([client.resetStore(), signOut()]);
@@ -127,56 +154,29 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
     handler.open();
   };
 
-  const onClickEdit = () => {
-    setReadOnly(false);
-    // スマホかどうか見たいので本来はuserAgentの判定が必要
-    if (largeScreen) {
-      nameRef.current?.focus();
-    }
-  };
-
-  const onSubmit = () => {
-    const input: UpdateUserByIdInput = {
-      id: user?.uid ?? "",
-      userPatch: {
-        name: form.values.name,
-      },
-    };
-    updateUserById({
-      variables: {
-        input,
-      },
-    });
-
-    // モーダルのコンテンツだけ別コンポーネントにしたほうがリセットしやすいかも
-    setReadOnly(true);
-    form.reset();
-  };
-
   const onClose = () => {
     handler.close();
-    setReadOnly(true);
-    form.reset();
+    setUserName("");
+    setInputtedAtLeastOnce(false);
   };
 
   return (
     <div className="flex flex-col">
-      <header
-        className="sticky top-0 h-12 flex items-center justify-end transition-all px-2 backdrop-blur-md z-50 border-0 border-b border-neutral-700 border-solid"
+      <Header
+        className="sticky top-0 p-1 flex items-center justify-end transition-all px-2 backdrop-blur-md z-50 border-0 border-b border-neutral-700 border-solid"
+        height="auto"
         ref={headerRef}
       >
         <Link className="mr-auto font-bold" href="/">
           <Text
             fw="bold"
-            className="text-3xl"
+            className="text-3xl my-0"
             component={router.pathname === "/" ? "h1" : "h2"}
           >
             gamelog
           </Text>
         </Link>
 
-        {/* 読込中 */}
-        {loadingUser && <div className="flex h-8 w-8 items-center" />}
         {/* ログイン済み */}
         {user && (
           <>
@@ -207,7 +207,7 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
             </Text>
           </Link>
         )}
-      </header>
+      </Header>
       {children}
       <Modal
         opened={isSettingOpen}
@@ -220,24 +220,30 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
       >
         <Box>
           {/* edit user name */}
-          <form onSubmit={form.onSubmit(onSubmit)}>
-            <Flex align="end" gap="xs">
-              <TextInput
-                ref={nameRef}
-                placeholder={data?.userById?.name}
-                label="ユーザー名"
-                className="w-full"
-                {...form.getInputProps("name")}
-                readOnly={readOnly}
-              />
-              {readOnly && (
-                <Button color="gray" onClick={onClickEdit}>
-                  編集
-                </Button>
-              )}
-              {!readOnly && <Button type="submit">保存</Button>}
-            </Flex>
-          </form>
+          <Stack spacing={0}>
+            <TextInput
+              placeholder={data?.userById?.name}
+              label="ユーザー名"
+              className="w-full"
+              value={userName}
+              onChange={(e) => setUserName(e.currentTarget.value)}
+              onInput={() => setInputtedAtLeastOnce(true)}
+              rightSection={
+                <>
+                  {loading ? (
+                    <Loader size="sm" />
+                  ) : succeeded ? (
+                    <CheckIcon color="#19BA3A" width={20} />
+                  ) : null}
+                </>
+              }
+            />
+            {showValidationMsg && (
+              <Text color="red" size="sm">
+                1~255文字で入力してください
+              </Text>
+            )}
+          </Stack>
           <Group position="right" className="mt-8">
             <Button onClick={onClickDeleteUser} color="red">
               永久に削除する場合はこちら
