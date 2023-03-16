@@ -1,64 +1,50 @@
-# Node, PostgreSQL and GraphQL (NPG) Boilerplate
+# ポートフォリオ
 
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+## 使用技術
 
-This is a free quick-to-use boilerplate for setting up your backend API with Node, GraphQL and PostgreSQL.
-This is meant to quickly set you up for frontend development.
+- next.js
+- tailwind
+- mantine
+- Ant Design Charts
+- postgraphile
+- graphQL
+- graphql-codegen
+- firebase auth
 
-This GraphQL API is powered by [postgraphile](https://www.graphile.org/postgraphile/introduction/)
+## ページ一覧
 
-This repository contains:
+- インデックスページ(ISR)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/index.tsx)
+- 新規登録ページ(SSG)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/signup)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/signup/index.tsx)
+- ログインページ(SSG)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/signin)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/signin/index.tsx)
+- ユーザー削除ページ(SSG)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/delete-user)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/delete-user/index.tsx)
+- 投稿閲覧ページ(ISR)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/posts/103)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/posts/%5Bpid%5D/index.tsx)
+- 新規投稿ページ(SSR)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/posts/new)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/posts/new/index.tsx)
+- 投稿編集ページ(SSR)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/posts/103/edit)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/posts/%5Bpid%5D/edit.tsx)
+- 404 ページ(SSG)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/tekitou)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/404.tsx)
+- データ閲覧ページ(ISR)
+  - [実際のページ](https://postgraphile-next-tailwind-mantin-graphql-portfolio.vercel.app/data)
+  - [ソースコード](https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/pages/data/index.tsx)
 
-1. A containerized Node GraphQL API
-2. A containerized PostgreSQL Database
-3. An environment variables, `env`, file
+## その他
 
-## Table of Contents
+- Apollo の設定してるファイル: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/master/nextjs/src/contexts/MyApolloProvider.tsx
 
-- [Background](#background)
-- [Usage](#usage)
-  - [Modifying the Schema](#modifying-the-schema)
-- [Maintainers](#maintainers)
-- [Contributing](#contributing)
-- [License](#license)
+- next.js のフォント最適化: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/5da04f755e7a93b208f2c0b88ea74922b027b2b0/nextjs/src/pages/_app.tsx#L34
 
-## Background
-
-Everybody wants to quickly set up their Backend APIs. As such, this repo was made exactly for that purpose. Th
-
-## Usage
-
-To set up your Node GraphQL API, simply run
-
-```
-docker-compose up --build
-```
-
-After your containers have finished setting up, you should be able to access `http://localhost:3000/graphiql` and see the following:
-
-![GraphiQL Sample](https://raw.githubusercontent.com/RedTint/node-postgraphile-boilerplate/master/assets/sample-output.png)
-
-Upon seeing the above interface, you should be able to start working on your frontend application.
-
-### Modifying the Schema
-
-I have only created a sample database schema to get you up and running.
-Feel free to add scripts [here](https://github.com/RedTint/node-postgraphile-boilerplate/tree/master/db/scripts)
-
-## Maintainers
-
-[@RedTint](https://github.com/RedTint).
-
-## Contributing
-
-Feel free to dive in! [Open an issue](https://github.com/RedTint/node-postgraphile-boilerplate/issues/new) or submit PRs.
-
-Standard Readme follows the [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/) Code of Conduct.
-
-### Contributors
-
-Only me at this point. =)
-
-## License
-
-[MIT](LICENSE) © Algefmarc Anthony L. Almocera
+- Mantine のデフォルトテーマのカスタマイズ: https://github.com/msickpaler/postgraphile-next-tailwind-mantin-graphql-portfolio/blob/5da04f755e7a93b208f2c0b88ea74922b027b2b0/nextjs/src/pages/_app.tsx#L46
