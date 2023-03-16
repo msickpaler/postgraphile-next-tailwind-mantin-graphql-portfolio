@@ -48,6 +48,23 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         colors: {
           transparent: ["transparent"],
         },
+        components: {
+          TextInput: {
+            defaultProps: {
+              size: "md",
+            },
+          },
+          PasswordInput: {
+            defaultProps: {
+              size: "md",
+            },
+          },
+          Textarea: {
+            defaultProps: {
+              size: "md",
+            },
+          },
+        },
       }}
     >
       <ModalsProvider modals={{ info: InfoModal }}>
