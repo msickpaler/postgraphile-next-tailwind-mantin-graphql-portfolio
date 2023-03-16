@@ -8,6 +8,7 @@ import { NextPage } from "next";
 import { MyApolloProvider } from "@/contexts/MyApolloProvider";
 import { ModalsProvider } from "@mantine/modals";
 import { InfoModal } from "@/components/Modal/InfoModal";
+import { Inter } from "next/font/google";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -30,6 +31,11 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -47,7 +53,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <ModalsProvider modals={{ info: InfoModal }}>
         <AuthContext.Provider value={firebaseApp}>
           <MyApolloProvider>
-            {getLayout(<Component {...pageProps} />)}
+            <div className={`${inter.variable} font-sans`}>
+              {getLayout(<Component {...pageProps} />)}
+            </div>
           </MyApolloProvider>
         </AuthContext.Provider>
       </ModalsProvider>

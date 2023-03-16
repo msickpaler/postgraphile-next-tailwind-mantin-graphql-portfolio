@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import { NextPageWithLayout } from "./_app";
 import { GlobalHeader } from "@/layouts/GlobalHeader";
 import { ReactElement } from "react";
@@ -9,8 +8,6 @@ import { Query, QueryAllPostsArgs } from "@/types/graphql";
 import Link from "next/link";
 import { Carousel } from "@mantine/carousel";
 import { SimplePostCard } from "@/components/Card/SimplePostCard";
-
-const inter = Inter({ subsets: ["latin"] });
 
 const GET_NEW_POSTS_QUERY = gql`
   query getUserById {
