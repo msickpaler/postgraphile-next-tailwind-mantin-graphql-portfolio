@@ -121,7 +121,7 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
                 {authorName}
               </Text>
               <Text size="sm" className="break-all">
-                {formatToJP(post.createdAt, true)}
+                {formatToJP(post.createdAt)}
               </Text>
             </Stack>
             {user?.uid && post?.authorId && user?.uid === post.authorId && (

@@ -1,7 +1,7 @@
 const to2digit = (num: number) => num.toString().padStart(2, "0");
 
-export const formatToJP = (date: string, ssr: boolean = false) => {
-  if (ssr) {
+export const formatToJP = (date: string) => {
+  if (typeof window === "undefined") {
     const d = new Date(date);
     const ymd = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
     const t = `${to2digit(d.getHours())}:${to2digit(d.getMinutes())}`;
