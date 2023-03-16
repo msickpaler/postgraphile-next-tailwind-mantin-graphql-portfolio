@@ -137,18 +137,9 @@ const PostPage = ({ post, authorName }: { post: Post; authorName: string }) => {
             </Stack>
             {user?.uid && post?.authorId && user?.uid === post.authorId && (
               <>
-                <Link
-                  className="ml-auto flex-shrink-0"
-                  href={`/posts/${post.id}/edit`}
-                >
-                  <Text
-                    className="rounded-[4px] px-[1.125rem] py-[0.5rem] text-sm font-bold text-center hover:opacity-80"
-                    bg="blue"
-                    color="white"
-                  >
-                    編集
-                  </Text>
-                </Link>
+                <Button component={Link} href={`/posts/${post.id}/edit`}>
+                  編集
+                </Button>
                 <Button color="red" onClick={onClickDelete}>
                   削除
                 </Button>

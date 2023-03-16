@@ -180,15 +180,9 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         {/* ログイン済み */}
         {user && (
           <>
-            <Link href="/posts/new">
-              <Text
-                className="rounded-md px-2 py-1 text-sm font-bold hover:opacity-80"
-                bg="blue"
-                color="white"
-              >
-                新規投稿
-              </Text>
-            </Link>
+            <Button component={Link} href="/posts/new">
+              新規投稿
+            </Button>
 
             <UnstyledButton onClick={onClickAvatar} ml="xs">
               <Avatar variant="filled" color="transparent" />
@@ -197,15 +191,9 @@ export const GlobalHeader = ({ children }: { children: ReactNode }) => {
         )}
         {/* 未ログイン */}
         {!user && !loadingUser && (
-          <Link href="/signin">
-            <Text
-              className="my-1 ml-auto rounded-md px-2 py-1 text-sm font-bold"
-              bg="blue"
-              color="white"
-            >
-              ログイン
-            </Text>
-          </Link>
+          <Button component={Link} href="/signin">
+            ログイン
+          </Button>
         )}
       </Header>
       {children}
